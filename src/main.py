@@ -1,34 +1,35 @@
 from heictojpeg import HEIC2JPEG
 from tkinter import filedialog, messagebox
-import os
 import tkinter as tk
+import os
 
 selected_folder = ""
-selected_files = []
-processed_files = []
+selected_images = []
+processed_images = []
 processing = False
 instance = None
 
 def open_folder():
-    global selected_folder, selected_files
+    global selected_folder, selected_images
     folder_path = filedialog.askdirectory()
     if folder_path:
         selected_folder = folder_path
         try:
             contents = os.listdir(folder_path)
-            # Filter by .heic files
-            selected_files = [os.path.join(folder_path, file_name) for file_name in contents if file_name.lower().endswith(".heic") and os.path.isfile(os.path.join(folder_path, file_name))]
-            content_str = "\n".join(selected_files)
+            # Filter by .heic images
+            selected_images = [os.path.join(folder_path, file_name) for file_name in contents if file_name.lower().endswith(".heic") and os.path.isfile(os.path.join(folder_path, file_name))]
+            content_str = "\n".join(selected_images)
             messagebox.showinfo("Folder Contents", f"HEIC images found {folder_path}:\n{content_str}")
         except Exception as e:
             messagebox.showerror("Error", f"An error occurred: {str(e)}")
 
-def process_files():
-    global selected_files, processed_files, processing, instance
-    if not selected_files:
-        messagebox.showwarning("No Files Selected", "Please select a folder with eligible files of HEIC type.")
+def process_images():
+    global selected_images, processed_images, processing, instance
+    if not selected_images:
+        messagebox.showwarning("No Images Selected", "Please select a folder with eligible images of HEIC type.")
         return
     try:
+        # TODO: custom output folder name input
         output_directory = os.path.join(selected_folder, "jpeg_converted")
         if os.path.exists(output_directory):
             raise FileExistsError("The output folder already exists.")
@@ -36,18 +37,18 @@ def process_files():
 
         btn_save.config(state=tk.DISABLED)
         btn_cancel.config(state=tk.NORMAL)
-        processing = True  # Set processing flag
-        all_files_processed = True
+        processing = True
+        all_images_processed = True
 
-        for file_path in selected_files:
+        for file_path in selected_images:
             if not processing:
-                all_files_processed = False
-                break  # Exit processing if the user canceled
+                all_images_processed = False
+                break  # Exit on user cancellation
             
             instance = HEIC2JPEG(file_path, output_directory)
             instance.save()
             
-            processed_files.append(file_path)
+            processed_images.append(file_path)
             processed_text.insert(tk.END, f"{file_path}\n")
             processed_text.update_idletasks()
 
@@ -56,8 +57,8 @@ def process_files():
         processing = False
         instance = None
 
-        if all_files_processed:
-            messagebox.showinfo("Processing Complete", f"Processed {len(selected_files)} files successfully.")
+        if all_images_processed:
+            messagebox.showinfo("Processing Complete", f"Processed {len(selected_images)} images successfully.")
         else:
             messagebox.showinfo("Processing Canceled", "Processing was canceled by the user or completed early.")
     except FileExistsError as fe:
@@ -82,7 +83,7 @@ if __name__ == '__main__':
 
     buttons_frame = tk.Frame(window, relief=tk.RAISED, bd=2)
     btn_open = tk.Button(buttons_frame, text="Open directory", command=open_folder)
-    btn_save = tk.Button(buttons_frame, text="Convert", command=process_files)
+    btn_save = tk.Button(buttons_frame, text="Convert", command=process_images)
     btn_cancel = tk.Button(buttons_frame, text="Cancel", command=cancel_processing, state=tk.DISABLED)
     btn_open.grid(row=0, column=0, sticky="ew", padx=5, pady=5)
     btn_save.grid(row=1, column=0, sticky="ew", padx=5)    
