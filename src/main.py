@@ -58,12 +58,14 @@ def process_images():
                 all_images_processed = False
                 break  # Exit on user cancellation
             
+            original_file_name = os.path.splitext(os.path.basename(file_path))[0]
             instance = HEIC2JPEG(file_path, output_directory)
             extension = ".jpeg" if selected_format == ".jpeg" else ".png"
+            processed_file_name = original_file_name + extension
             instance.save(extension)
             
             processed_images.append(file_path)
-            processed_text.insert(tk.END, f"{file_path}\n")
+            processed_text.insert(tk.END, f"{original_file_name}.HEIC --> {processed_file_name}\n")
             processed_text.update_idletasks()
 
         btn_save.config(state=tk.NORMAL)
