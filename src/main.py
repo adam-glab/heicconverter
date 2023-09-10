@@ -9,8 +9,6 @@ processed_images = []
 processing = False
 instance = None
 
-selected_format = ".jpeg"
-
 def open_folder():
     global selected_folder, selected_images
     folder_path = filedialog.askdirectory()
@@ -39,6 +37,7 @@ def process_images():
         messagebox.showwarning("No Images Selected", "Please select a folder with eligible images of HEIC type.")
         return
     try:
+        selected_extension = selected_format.get()
         custom_folder_name = output_folder_entry.get()
         if not custom_folder_name:
             messagebox.showerror("Error", "Please enter a folder name.")
@@ -60,9 +59,8 @@ def process_images():
             
             original_file_name = os.path.splitext(os.path.basename(file_path))[0]
             instance = HEICCONVERTER(file_path, output_directory)
-            extension = ".jpeg" if selected_format == ".jpeg" else ".png"
-            processed_file_name = original_file_name + extension
-            instance.save(extension)
+            processed_file_name = original_file_name + selected_extension
+            instance.save(selected_extension)
             
             processed_images.append(file_path)
             processed_text.insert(tk.END, f"{original_file_name}.HEIC --> {processed_file_name}\n")
@@ -111,6 +109,9 @@ def show_app_info():
 if __name__ == '__main__':
     window = tk.Tk()
     window.title("HEIC Converter")
+    
+    selected_format = tk.StringVar()
+    selected_format.set(".jpeg")
 
     window.minsize(400, 200)
     window.columnconfigure(0, weight=1)
@@ -132,10 +133,11 @@ if __name__ == '__main__':
     radio_frame = tk.Frame(buttons_frame)
     radio_frame.grid(row=1, column=2, columnspan=2)
 
-    radio_jpeg = tk.Radiobutton(radio_frame, text="JPEG", variable=selected_format, value=".jpeg", command=lambda: select_format(".jpeg"))
-    radio_png = tk.Radiobutton(radio_frame, text="PNG", variable=selected_format, value=".png", command=lambda: select_format(".png"))
-    radio_jpeg.grid(row=0, column=0, sticky="w")
-    radio_png.grid(row=0, column=1, sticky="w")
+    jpeg_radio = tk.Radiobutton(radio_frame, text="JPEG", variable=selected_format, value=".jpeg")
+    png_radio = tk.Radiobutton(radio_frame, text="PNG", variable=selected_format, value=".png")
+    jpeg_radio.grid(row=0, column=0, sticky="w")
+    png_radio.grid(row=0, column=1, sticky="w")
+    jpeg_radio.select()
     
     folder_name_label = tk.Label(buttons_frame, text="Folder Name:")
     folder_name_label.grid(row=2, column=1, padx=5, pady=5)

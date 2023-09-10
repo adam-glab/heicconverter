@@ -1,10 +1,9 @@
-# https://github.com/NatLee/HEIC2PNG
+# taken from https://github.com/NatLee/HEIC2PNG
 from PIL import Image
 from pathlib import Path
 from pillow_heif import register_heif_opener
 
 register_heif_opener()
-# TODO: add PNG as a secondary format
 class HEICCONVERTER:
     def __init__(self, image_file_path: str, output_directory: str):
         self.image_file_path = Path(image_file_path)
