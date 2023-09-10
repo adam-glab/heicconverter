@@ -130,7 +130,7 @@ if __name__ == '__main__':
     
     current_directory_frame = tk.Frame(window, relief=tk.RAISED, bd=2)
     current_directory_label = tk.Label(current_directory_frame, text="Current Directory:")
-    current_directory_label.pack(side=tk.LEFT, padx=5)
+    current_directory_label.pack(side=tk.TOP, anchor=tk.W)
     current_directory_text = tk.Text(current_directory_frame, wrap=tk.WORD, height=1, width=30)
     current_directory_text.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
     current_directory_frame.grid(row=1, column=0, sticky="nsew")
