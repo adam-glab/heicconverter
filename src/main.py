@@ -135,14 +135,14 @@ if __name__ == '__main__':
     current_directory_label.pack(side=tk.TOP, anchor=tk.W)
     current_directory_text = tk.Text(current_directory_frame, wrap=tk.WORD, height=1, width=30)
     current_directory_text.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
-    current_directory_frame.grid(row=1, column=0, sticky="nsew")
+    current_directory_frame.grid(row=1, column=0, sticky="nsew", padx=5, pady=5)
     
     processed_frame = tk.Frame(window, relief=tk.RAISED, bd=2)
     processed_label = tk.Label(processed_frame, text="Converted photos:")
     processed_label.pack(side=tk.TOP, anchor=tk.W)
     processed_text = tk.Text(processed_frame, wrap=tk.WORD, height=10, width=30)
     processed_text.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
-    processed_frame.grid(row=2, column=0, sticky="nsew")
+    processed_frame.grid(row=2, column=0, sticky="nsew", padx=5, pady=5)
 
     # Vertical extension
     window.grid_rowconfigure(1, weight=1)
