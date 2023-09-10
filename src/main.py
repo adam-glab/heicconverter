@@ -9,6 +9,8 @@ processed_images = []
 processing = False
 instance = None
 
+selected_format = ".jpeg"
+
 def open_folder():
     global selected_folder, selected_images
     folder_path = filedialog.askdirectory()
@@ -17,7 +19,11 @@ def open_folder():
         try:
             contents = os.listdir(folder_path)
             # Filter by .heic images
-            selected_images = [os.path.join(folder_path, file_name) for file_name in contents if file_name.lower().endswith(".heic") and os.path.isfile(os.path.join(folder_path, file_name))]
+            selected_images = [os.path.join(folder_path, file_name) 
+                               for file_name in contents 
+                               if file_name.lower().endswith(".heic") 
+                               and os.path.isfile(os.path.join(folder_path, file_name))
+                               ]
             content_str = "\n".join(selected_images)
             messagebox.showinfo("Folder Contents", f"HEIC images found {folder_path}:\n{content_str}")
         except Exception as e:
@@ -46,7 +52,8 @@ def process_images():
                 break  # Exit on user cancellation
             
             instance = HEIC2JPEG(file_path, output_directory)
-            instance.save()
+            extension = ".jpeg" if selected_format == ".jpeg" else ".png"
+            instance.save(extension)
             
             processed_images.append(file_path)
             processed_text.insert(tk.END, f"{file_path}\n")
@@ -73,6 +80,10 @@ def cancel_processing():
     if instance is not None:
         instance.image.close()
 
+def select_format(format_choice):
+    global selected_format
+    selected_format = format_choice
+
 if __name__ == '__main__':
     window = tk.Tk()
     window.title("HEIC2JPEG")
@@ -82,18 +93,27 @@ if __name__ == '__main__':
     window.maxsize(800,600)
 
     buttons_frame = tk.Frame(window, relief=tk.RAISED, bd=2)
+    
     btn_open = tk.Button(buttons_frame, text="Open directory", command=open_folder)
     btn_save = tk.Button(buttons_frame, text="Convert", command=process_images)
     btn_cancel = tk.Button(buttons_frame, text="Cancel", command=cancel_processing, state=tk.DISABLED)
     btn_open.grid(row=0, column=0, sticky="ew", padx=5, pady=5)
     btn_save.grid(row=1, column=0, sticky="ew", padx=5)    
     btn_cancel.grid(row=2, column=0, sticky="ew", padx=5, pady=5)
-    buttons_frame.grid(row=0, column=0, sticky="nsew")
+    
+    format_label = tk.Label(buttons_frame, text="Select Format:")
+    format_label.grid(row=1, column=1, padx=5)
+    radio_jpeg = tk.Radiobutton(buttons_frame, text="JPEG", variable=selected_format, value="jpeg", command=lambda: select_format(".jpeg"))
+    radio_png = tk.Radiobutton(buttons_frame, text="PNG", variable=selected_format, value="png", command=lambda: select_format(".png"))
+    radio_jpeg.grid(row=1, column=2, sticky="w")
+    radio_png.grid(row=1, column=3, sticky="w")
 
+    buttons_frame.grid(row=0, column=0, sticky="nsew")
+    
     processed_frame = tk.Frame(window, relief=tk.RAISED, bd=2)
     processed_label = tk.Label(processed_frame, text="Converted photos:")
     processed_label.pack(side=tk.TOP, anchor=tk.W)
-    processed_text = tk.Text(processed_frame, wrap=tk.WORD, height=10, width=30)
+    processed_text = tk.Text(processed_frame, wrap=tk.WORD, height=10, width=30, state=tk.DISABLED)
     processed_text.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
     processed_frame.grid(row=1, column=0, sticky="nsew")
 
