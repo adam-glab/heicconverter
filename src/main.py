@@ -92,6 +92,21 @@ def cancel_processing():
 def select_format(format_choice):
     global selected_format
     selected_format = format_choice
+    
+def show_app_info():
+    app_info = """
+    HEIC to JPEG/PNG Converter
+
+    1. Click "Open directory" to select a folder containing HEIC images.
+    2. Choose the desired output format (JPEG or PNG).
+    3. Enter a custom folder name for the converted files (optional).
+    4. Click "Convert" to start the conversion process.
+    5. To cancel the conversion, click "Cancel."
+    6. Processed files will be displayed below.
+
+    Note: Only HEIC files will be converted.
+    """
+    messagebox.showinfo("How to use", app_info)
 
 if __name__ == '__main__':
     window = tk.Tk()
@@ -106,9 +121,11 @@ if __name__ == '__main__':
     btn_open = tk.Button(buttons_frame, text="Open directory", command=open_folder)
     btn_save = tk.Button(buttons_frame, text="Convert", command=process_images)
     btn_cancel = tk.Button(buttons_frame, text="Cancel", command=cancel_processing, state=tk.DISABLED)
+    btn_info = tk.Button(buttons_frame, text="How to use", command=show_app_info)
     btn_open.grid(row=0, column=0, sticky="ew", padx=5, pady=5)
     btn_save.grid(row=1, column=0, sticky="ew", padx=5)    
     btn_cancel.grid(row=2, column=0, sticky="ew", padx=5, pady=5)
+    btn_info.grid(row=3, column=0, sticky="ew", padx=5, pady=5)
     
     format_label = tk.Label(buttons_frame, text="Select Format:")
     format_label.grid(row=1, column=1, padx=5)
