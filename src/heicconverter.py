@@ -5,7 +5,7 @@ from pillow_heif import register_heif_opener
 
 register_heif_opener()
 # TODO: add PNG as a secondary format
-class HEIC2JPEG:
+class HEICCONVERTER:
     def __init__(self, image_file_path: str, output_directory: str):
         self.image_file_path = Path(image_file_path)
         if self.image_file_path.suffix.lower() != '.heic':

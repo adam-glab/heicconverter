@@ -1,4 +1,4 @@
-from heictojpeg import HEIC2JPEG
+from heicconverter import HEICCONVERTER
 from tkinter import filedialog, messagebox
 import tkinter as tk
 import os
@@ -59,7 +59,7 @@ def process_images():
                 break  # Exit on user cancellation
             
             original_file_name = os.path.splitext(os.path.basename(file_path))[0]
-            instance = HEIC2JPEG(file_path, output_directory)
+            instance = HEICCONVERTER(file_path, output_directory)
             extension = ".jpeg" if selected_format == ".jpeg" else ".png"
             processed_file_name = original_file_name + extension
             instance.save(extension)
@@ -74,7 +74,7 @@ def process_images():
         instance = None
 
         if all_images_processed:
-            messagebox.showinfo("Processing Complete", f"Processed {len(selected_images)} images successfully.")
+            messagebox.showinfo("Processing Complete", f"Processed all {len(selected_images)} images successfully.")
         else:
             messagebox.showinfo("Processing Canceled", "Processing was canceled by the user or completed early.")
     except FileExistsError as fe:
@@ -95,12 +95,12 @@ def select_format(format_choice):
     
 def show_app_info():
     app_info = """
-    HEIC to JPEG/PNG Converter
+    HEIC Converter
 
     1. Click "Open directory" to select a folder containing HEIC images.
     2. Choose the desired output format (JPEG or PNG).
     3. Enter a custom folder name for the converted files (optional).
-    4. Click "Convert" to start the conversion process.
+    4. Click "Convert photos" to start the conversion process.
     5. To cancel the conversion, click "Cancel."
     6. Processed files will be displayed below.
 
@@ -110,7 +110,7 @@ def show_app_info():
 
 if __name__ == '__main__':
     window = tk.Tk()
-    window.title("HEIC2JPEG")
+    window.title("HEIC Converter")
 
     window.minsize(400, 200)
     window.columnconfigure(0, weight=1)
@@ -119,7 +119,7 @@ if __name__ == '__main__':
     buttons_frame = tk.Frame(window, relief=tk.RAISED, bd=2)
     
     btn_open = tk.Button(buttons_frame, text="Open directory", command=open_folder)
-    btn_save = tk.Button(buttons_frame, text="Convert", command=process_images)
+    btn_save = tk.Button(buttons_frame, text="Convert photos", command=process_images)
     btn_cancel = tk.Button(buttons_frame, text="Cancel", command=cancel_processing, state=tk.DISABLED)
     btn_info = tk.Button(buttons_frame, text="How to use", command=show_app_info)
     btn_open.grid(row=0, column=0, sticky="ew", padx=5, pady=5)
