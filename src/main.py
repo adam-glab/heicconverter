@@ -25,6 +25,10 @@ def open_folder():
                                and os.path.isfile(os.path.join(folder_path, file_name))
                                ]
             content_str = "\n".join(selected_images)
+            current_directory_text.config(state=tk.NORMAL)
+            current_directory_text.delete(1.0, tk.END)
+            current_directory_text.insert(tk.END, selected_folder)
+            current_directory_text.config(state=tk.DISABLED)
             messagebox.showinfo("Folder Contents", f"HEIC images found {folder_path}:\n{content_str}")
         except Exception as e:
             messagebox.showerror("Error", f"An error occurred: {str(e)}")
@@ -124,13 +128,21 @@ if __name__ == '__main__':
 
     buttons_frame.grid(row=0, column=0, sticky="nsew")
     
+    current_directory_frame = tk.Frame(window, relief=tk.RAISED, bd=2)
+    current_directory_label = tk.Label(current_directory_frame, text="Current Directory:")
+    current_directory_label.pack(side=tk.LEFT, padx=5)
+    current_directory_text = tk.Text(current_directory_frame, wrap=tk.WORD, height=1, width=30)
+    current_directory_text.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
+    current_directory_frame.grid(row=1, column=0, sticky="nsew")
+    
     processed_frame = tk.Frame(window, relief=tk.RAISED, bd=2)
     processed_label = tk.Label(processed_frame, text="Converted photos:")
     processed_label.pack(side=tk.TOP, anchor=tk.W)
     processed_text = tk.Text(processed_frame, wrap=tk.WORD, height=10, width=30)
     processed_text.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
-    processed_frame.grid(row=1, column=0, sticky="nsew")
+    processed_frame.grid(row=2, column=0, sticky="nsew")
 
     # Vertical extension
     window.grid_rowconfigure(1, weight=1)
+    window.grid_rowconfigure(2, weight=1)
     window.mainloop()
