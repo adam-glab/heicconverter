@@ -35,8 +35,11 @@ def process_images():
         messagebox.showwarning("No Images Selected", "Please select a folder with eligible images of HEIC type.")
         return
     try:
-        # TODO: custom output folder name input
-        output_directory = os.path.join(selected_folder, "jpeg_converted")
+        custom_folder_name = output_folder_entry.get()
+        if not custom_folder_name:
+            messagebox.showerror("Error", "Please enter a folder name.")
+            return
+        output_directory = os.path.join(selected_folder, custom_folder_name)
         if os.path.exists(output_directory):
             raise FileExistsError("The output folder already exists.")
         os.makedirs(output_directory, exist_ok=True)
@@ -103,17 +106,28 @@ if __name__ == '__main__':
     
     format_label = tk.Label(buttons_frame, text="Select Format:")
     format_label.grid(row=1, column=1, padx=5)
-    radio_jpeg = tk.Radiobutton(buttons_frame, text="JPEG", variable=selected_format, value="jpeg", command=lambda: select_format(".jpeg"))
-    radio_png = tk.Radiobutton(buttons_frame, text="PNG", variable=selected_format, value="png", command=lambda: select_format(".png"))
-    radio_jpeg.grid(row=1, column=2, sticky="w")
-    radio_png.grid(row=1, column=3, sticky="w")
+    radio_frame = tk.Frame(buttons_frame)
+    radio_frame.grid(row=1, column=2, columnspan=2)
+
+    radio_jpeg = tk.Radiobutton(radio_frame, text="JPEG", variable=selected_format, value=".jpeg", command=lambda: select_format(".jpeg"))
+    radio_png = tk.Radiobutton(radio_frame, text="PNG", variable=selected_format, value=".png", command=lambda: select_format(".png"))
+    radio_jpeg.grid(row=0, column=0, sticky="w")
+    radio_png.grid(row=0, column=1, sticky="w")
+    
+    folder_name_label = tk.Label(buttons_frame, text="Folder Name:")
+    folder_name_label.grid(row=2, column=1, padx=5, pady=5)
+
+    default_folder_name = "output"
+    output_folder_entry = tk.Entry(buttons_frame)
+    output_folder_entry.insert(0, default_folder_name)
+    output_folder_entry.grid(row=2, column=2, padx=5, pady=5)
 
     buttons_frame.grid(row=0, column=0, sticky="nsew")
     
     processed_frame = tk.Frame(window, relief=tk.RAISED, bd=2)
     processed_label = tk.Label(processed_frame, text="Converted photos:")
     processed_label.pack(side=tk.TOP, anchor=tk.W)
-    processed_text = tk.Text(processed_frame, wrap=tk.WORD, height=10, width=30, state=tk.DISABLED)
+    processed_text = tk.Text(processed_frame, wrap=tk.WORD, height=10, width=30)
     processed_text.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
     processed_frame.grid(row=1, column=0, sticky="nsew")
 
