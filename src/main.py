@@ -22,12 +22,12 @@ def open_folder():
                                if file_name.lower().endswith(".heic") 
                                and os.path.isfile(os.path.join(folder_path, file_name))
                                ]
-            content_str = "\n".join(selected_images)
+            total_files = len(selected_images)
             current_directory_text.config(state=tk.NORMAL)
             current_directory_text.delete(1.0, tk.END)
             current_directory_text.insert(tk.END, selected_folder)
             current_directory_text.config(state=tk.DISABLED)
-            messagebox.showinfo("Folder Contents", f"HEIC images found {folder_path}:\n{content_str}")
+            messagebox.showinfo("Folder Contents", f"HEIC images found {folder_path}:\n{total_files}")
         except Exception as e:
             messagebox.showerror("Error", f"An error occurred: {str(e)}")
 
